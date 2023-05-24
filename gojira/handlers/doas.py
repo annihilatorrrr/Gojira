@@ -44,8 +44,10 @@ async def evaluate(message: Message, command: CommandObject):
         exc = "".join(
             traceback.format_exception(exc[0], exc[1], exc[2].tb_next.tb_next.tb_next)  # type: ignore  # noqa: E501
         )
-        error_txt = "<b>Failed to execute the expression:\n&gt;</b> <code>{eval}</code>"
-        error_txt += "\n\n<b>Error:\n&gt;</b> <code>{exc}</code>"
+        error_txt = (
+            "<b>Failed to execute the expression:\n&gt;</b> <code>{eval}</code>"
+            + "\n\n<b>Error:\n&gt;</b> <code>{exc}</code>"
+        )
         await sent.edit_text(
             error_txt.format(eval=query, exc=html.escape(exc)), disable_web_page_preview=True
         )
@@ -57,7 +59,7 @@ async def evaluate(message: Message, command: CommandObject):
         lines = str(stdout).splitlines()
         output = "".join(f"<code>{line}</code>\n" for line in lines)
 
-        if len(output) > 0:
+        if output != "":
             if len(output) > (4096 - len(output_message)):
                 document = io.BytesIO(
                     (output.replace("<code>", "").replace("</code>", "")).encode()

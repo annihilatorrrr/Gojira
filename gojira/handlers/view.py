@@ -25,9 +25,8 @@ async def view(message: Message):
     if message.via_bot.id == me.id and message.photo and message.caption:
         for line in message.caption.splitlines():
             if "ID:" in line:
-                matches = re.match(r"ID: (\d+) \((\w+)\)", line)
-                if matches:
-                    content_type, content_id = matches.group(2).lower(), int(matches.group(1))
+                if matches := re.match(r"ID: (\d+) \((\w+)\)", line):
+                    content_type, content_id = matches[2].lower(), int(matches[1])
 
                     if content_type == "anime":
                         await anime_view(message, anime_id=content_id)

@@ -191,7 +191,7 @@ async def anime_view(
         )
     if anime["studios"] and len(anime["studios"]["nodes"]) > 0:
         text += _("\n<b>Studios</b>: <code>{studios}</code>").format(studios=", ".join(studios))
-    if len(producers) > 0:
+    if producers:
         text += _("\n<b>Producers</b>: <code>{producers}</code>").format(
             producers=", ".join(producers)
         )
@@ -232,7 +232,7 @@ async def anime_view(
                         ).pack(),
                     )
                 )
-        if len(relations_buttons) > 0:
+        if relations_buttons:
             if relations_buttons[0].text != "⬅️ Prequel":
                 relations_buttons.reverse()
             keyboard.row(*relations_buttons)
@@ -385,7 +385,7 @@ async def anime_description(callback: CallbackQuery, callback_data: AnimeDescCal
         )
 
     if page != pages:
-        description = description[: len(description) - 3] + "..."
+        description = f"{description[:len(description) - 3]}..."
         page_buttons.append(
             InlineKeyboardButton(
                 text="➡️",
@@ -396,7 +396,7 @@ async def anime_description(callback: CallbackQuery, callback_data: AnimeDescCal
         )
 
     keyboard = InlineKeyboardBuilder()
-    if len(page_buttons) > 0:
+    if page_buttons:
         keyboard.row(*page_buttons)
 
     keyboard.row(
@@ -450,7 +450,6 @@ async def anime_characters(callback: CallbackQuery, callback_data: AnimeCharCall
         )
         return
 
-    characters_text = ""
     characters = sorted(
         [
             {
@@ -464,11 +463,10 @@ async def anime_characters(callback: CallbackQuery, callback_data: AnimeCharCall
     )
 
     me = await bot.get_me()
-    for character in characters:
-        characters_text += f"\n• <code>{character['id']}</code> - <a href='https://t.me/\
-{me.username}/?start=character_{character['id']}'>{character['name']['full']}</a> \
-(<i>{character['role']}</i>)"
-
+    characters_text = "".join(
+        f"\n• <code>{character['id']}</code> - <a href='https://t.me/\\n    #{me.username}/?start=character_{character['id']}'>{character['name']['full']}</a> \\n    #(<i>{character['role']}</i>)"
+        for character in characters
+    )
     # Separate staff_text into pages of 8 items
     characters_text = np.array(characters_text.split("\n"))
     characters_text = np.delete(characters_text, np.argwhere(characters_text == ""))
@@ -500,7 +498,7 @@ async def anime_characters(callback: CallbackQuery, callback_data: AnimeCharCall
     characters_text = "\n".join(characters_text)
 
     keyboard = InlineKeyboardBuilder()
-    if len(page_buttons) > 0:
+    if page_buttons:
         keyboard.add(*page_buttons)
 
     keyboard.row(

@@ -54,7 +54,7 @@ async def character_inline(inline: InlineQuery, match: re.Match[str]):
         if description := character["description"]:
             description = description.replace("__", "*")
             description = description.replace("~", "||")
-            description = description[0:500] + "..."
+            description = f"{description[:500]}..."
 
         text = f"*{character['name']['full']}*"
         text += _("\n*ID*: `{id}`").format(id=character["id"]) + " (*CHARACTER*)"
@@ -87,7 +87,7 @@ async def character_inline(inline: InlineQuery, match: re.Match[str]):
         )
 
     with suppress(TelegramBadRequest):
-        if len(results) > 0:
+        if results:
             await inline.answer(
                 results=results,
                 is_personal=True,

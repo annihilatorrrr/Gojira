@@ -15,7 +15,7 @@ async def get_chat_language(
     if not message or not union.from_user:
         return None, None
 
-    if not message or not message.from_user:
+    if not message.from_user:
         return message.chat.type, None
 
     language_code = None

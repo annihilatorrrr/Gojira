@@ -113,7 +113,7 @@ async def user_view(
     text += _("<b>Donator</b>: <code>{donator}</code>\n").format(donator=donator)
     if auser["about"]:
         if len(auser["about"]) > 200:
-            auser["about"] = auser["about"][0:200] + "..."
+            auser["about"] = auser["about"][:200] + "..."
         text += _("<b>About</b>: <code>{about}</code>\n").format(about=auser["about"])
 
     text += _("\n<b>Created At</b>: <code>{date}</code>\n").format(

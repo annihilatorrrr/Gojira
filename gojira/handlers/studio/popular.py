@@ -26,10 +26,7 @@ async def studio_popular(callback: CallbackQuery, callback_data: StudioPopuCallb
     status, data = await AniList.popular("studio")
     if data["data"]:
         items = data["data"]["Page"]["studios"]
-        results = []
-        for item in items:
-            results.append(item)
-
+        results = list(items)
         layout = Pagination(
             results,
             item_data=lambda i, pg: StudioCallback(query=i["id"]).pack(),

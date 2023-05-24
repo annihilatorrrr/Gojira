@@ -46,8 +46,6 @@ async def manga_view(
         await message.reply(_("You need to specify an manga. Use /manga name or id"))
         return
 
-    is_private: bool = message.chat.type == ChatType.PRIVATE
-
     query = str(
         callback_data.query
         if is_callback and callback_data is not None
@@ -70,6 +68,8 @@ async def manga_view(
                 return
 
         is_search = callback_data.is_search
+        is_private: bool = message.chat.type == ChatType.PRIVATE
+
         if is_search and not is_private:
             await message.delete()
 
@@ -213,7 +213,7 @@ async def manga_view(
                         ).pack(),
                     )
                 )
-        if len(relations_buttons) > 0:
+        if relations_buttons:
             if relations_buttons[0].text != "⬅️ Prequel":
                 relations_buttons.reverse()
             keyboard.row(*relations_buttons)
@@ -346,7 +346,7 @@ async def manga_description(callback: CallbackQuery, callback_data: MangaDescCal
         )
 
     if page != pages:
-        description = description[: len(description) - 3] + "..."
+        description = f"{description[:len(description) - 3]}..."
         page_buttons.append(
             InlineKeyboardButton(
                 text="➡️",
@@ -357,7 +357,7 @@ async def manga_description(callback: CallbackQuery, callback_data: MangaDescCal
         )
 
     keyboard = InlineKeyboardBuilder()
-    if len(page_buttons) > 0:
+    if page_buttons:
         keyboard.row(*page_buttons)
 
     keyboard.row(
@@ -411,7 +411,6 @@ async def manga_characters(callback: CallbackQuery, callback_data: MangaCharCall
         )
         return
 
-    characters_text = ""
     characters = sorted(
         [
             {
@@ -425,11 +424,10 @@ async def manga_characters(callback: CallbackQuery, callback_data: MangaCharCall
     )
 
     me = await bot.get_me()
-    for character in characters:
-        characters_text += f"\n• <code>{character['id']}</code> - <a href='https://t.me/\
-{me.username}/?start=character_{character['id']}'>{character['name']['full']}</a> \
-(<i>{character['role']}</i>)"
-
+    characters_text = "".join(
+        f"\n• <code>{character['id']}</code> - <a href='https://t.me/\\n    #{me.username}/?start=character_{character['id']}'>{character['name']['full']}</a> \\n    #(<i>{character['role']}</i>)"
+        for character in characters
+    )
     # Separate staff_text into pages of 8 items
     characters_text = np.array(characters_text.split("\n"))
     characters_text = np.delete(characters_text, np.argwhere(characters_text == ""))
@@ -461,7 +459,7 @@ async def manga_characters(callback: CallbackQuery, callback_data: MangaCharCall
     characters_text = "\n".join(characters_text)
 
     keyboard = InlineKeyboardBuilder()
-    if len(page_buttons) > 0:
+    if page_buttons:
         keyboard.add(*page_buttons)
 
     keyboard.row(
@@ -512,7 +510,6 @@ async def manga_staff(callback: CallbackQuery, callback_data: MangaStaffCallback
         )
         return
 
-    staff_text = ""
     staffs = sorted(
         [
             {
@@ -526,10 +523,10 @@ async def manga_staff(callback: CallbackQuery, callback_data: MangaStaffCallback
     )
 
     me = await bot.get_me()
-    for person in staffs:
-        staff_text += f"\n• <code>{person['id']}</code> - <a href='https://t.me/{me.username}/\
-?start=staff_{person['id']}'>{person['name']['full']}</a> (<i>{person['role']}</i>)"
-
+    staff_text = "".join(
+        f"\n• <code>{person['id']}</code> - <a href='https://t.me/{me.username}/\\n    #?start=staff_{person['id']}'>{person['name']['full']}</a> (<i>{person['role']}</i>)"
+        for person in staffs
+    )
     # Separate staff_text into pages of 8 items
     staff_text = np.array(staff_text.split("\n"))
     staff_text = np.delete(staff_text, np.argwhere(staff_text == ""))
@@ -561,7 +558,7 @@ async def manga_staff(callback: CallbackQuery, callback_data: MangaStaffCallback
     staff_text = "\n".join(staff_text)
 
     keyboard = InlineKeyboardBuilder()
-    if len(page_buttons) > 0:
+    if page_buttons:
         keyboard.add(*page_buttons)
 
     keyboard.row(
