@@ -55,7 +55,7 @@ async def staff_inline(inline: InlineQuery, match: re.Match[str]):
             description = description.replace("**", "")
             description = description.replace("~", "")
             description = re.sub(re.compile(r"<.*?>"), "", description)
-            description = description[0:260] + "..."
+            description = f"{description[:260]}..."
 
         text = f"**{staff['name']['full']}**"
         text += _("\n**ID**: `{id}`").format(id=staff["id"]) + " (**STAFF**)"
@@ -90,7 +90,7 @@ async def staff_inline(inline: InlineQuery, match: re.Match[str]):
         )
 
     with suppress(TelegramBadRequest):
-        if len(results) > 0:
+        if results:
             await inline.answer(
                 results=results,
                 is_personal=True,

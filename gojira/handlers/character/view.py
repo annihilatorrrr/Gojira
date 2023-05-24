@@ -138,7 +138,7 @@ async def character_view(
         keyboard.adjust(2)
 
         if len(text) > 1024:
-            text = text[:1021] + "..."
+            text = f"{text[:1021]}..."
 
         # Markdown
         text = text.replace("__", "*")

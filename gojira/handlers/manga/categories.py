@@ -85,10 +85,7 @@ async def manga_categorie(callback: CallbackQuery, callback_data: MangaGCategCal
     status, data = await AniList.categories("manga", page, categorie)
     if data["data"]:
         items = data["data"]["Page"]["media"]
-        results = []
-        for item in items:
-            results.append(item)
-
+        results = list(items)
         layout = Pagination(
             results,
             item_data=lambda i, pg: MangaCallback(query=i["id"]).pack(),

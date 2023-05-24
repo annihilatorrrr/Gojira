@@ -93,20 +93,17 @@ async def anime_scan(message: Message):
 
     video = result["video"]
     to_time = result["to"]
-    episode = result["episode"]
     anilist_id = result["anilist"]["id"]
-    file_name = result["filename"]
     from_time = result["from"]
     similarity = result["similarity"]
     is_adult = result["anilist"]["isAdult"]
-    title_native = result["anilist"]["title"]["native"]
     title_romaji = result["anilist"]["title"]["romaji"]
 
     text = f"<b>{title_romaji}</b>"
-    if title_native:
+    if title_native := result["anilist"]["title"]["native"]:
         text += f" (<code>{title_native}</code>)"
     text += _("\n\n<b>ID</b>: <code>{anime_id}</code>").format(anime_id=anilist_id)
-    if episode:
+    if episode := result["episode"]:
         text += _("\n<b>Episode</b>: <code>{episode}</code>").format(episode=episode)
     if is_adult:
         text += _("\n<b>Adult</b>: <code>Yes</code>")
@@ -129,6 +126,7 @@ async def anime_scan(message: Message):
     to_time = str(timedelta(seconds=result["to"])).split(".", 1)[0].rjust(8, "0")
 
     if video is not None:
+        file_name = result["filename"]
         with suppress(TelegramBadRequest):
             sent_video = await reply.reply_video(
                 video=f"{video}&size=l",

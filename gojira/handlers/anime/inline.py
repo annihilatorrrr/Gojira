@@ -57,7 +57,7 @@ async def anime_inline(inline: InlineQuery, match: re.Match[str]):
         if anime["description"]:
             description = anime["description"]
             description = re.sub(re.compile(r"<.*?>"), "", description)
-            description = description[0:260] + "..."
+            description = f"{description[:260]}..."
 
         studios = []
         producers = []
@@ -122,7 +122,7 @@ async def anime_inline(inline: InlineQuery, match: re.Match[str]):
             text += _("\n<b>Studios</b>: <code>{studios}</code>").format(
                 studios=", ".join(studios)
             )
-        if len(producers) > 0:
+        if producers:
             text += _("\n<b>Producers</b>: <code>{producers}</code>").format(
                 producers=", ".join(producers)
             )
@@ -164,7 +164,7 @@ async def anime_inline(inline: InlineQuery, match: re.Match[str]):
         )
 
     with suppress(TelegramBadRequest):
-        if len(results) > 0:
+        if results:
             await inline.answer(
                 results=results,
                 is_personal=True,

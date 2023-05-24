@@ -86,10 +86,7 @@ async def anime_categorie(callback: CallbackQuery, callback_data: AnimeGCategCal
 
     if data["data"]:
         items = data["data"]["Page"]["media"]
-        results = []
-        for item in items:
-            results.append(item)
-
+        results = list(items)
         layout = Pagination(
             results,
             item_data=lambda i, pg: AnimeCallback(query=i["id"]).pack(),

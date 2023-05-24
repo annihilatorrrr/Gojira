@@ -57,7 +57,7 @@ async def manga_inline(inline: InlineQuery, match: re.Match[str]):
         if manga["description"]:
             description = manga["description"]
             description = re.sub(re.compile(r"<.*?>"), "", description)
-            description = description[0:260] + "..."
+            description = f"{description[:260]}..."
 
         end_date_components = [
             component
@@ -142,7 +142,7 @@ async def manga_inline(inline: InlineQuery, match: re.Match[str]):
         )
 
     with suppress(TelegramBadRequest):
-        if len(results) > 0:
+        if results:
             await inline.answer(
                 results=results,
                 is_personal=True,
